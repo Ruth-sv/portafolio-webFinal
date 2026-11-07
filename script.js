@@ -16,7 +16,7 @@ let currentIndex=0;
 const safe=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function renderCards(filter='todos'){
   const list=projects.map((p,i)=>({...p,index:i})).filter(p=>filter==='todos'||p.category===filter);
-  grid.innerHTML=list.map(p=>`<button class="project-card" type="button" data-index="${p.index}" aria-label="Ver proyecto ${safe(p.name)}"><div class="project-image"><img src="${safe(p.cover)}" alt="Vista previa del proyecto ${safe(p.name)}" loading="lazy"><span class="project-arrow" aria-hidden="true">↗</span></div><div class="project-info"><div><h3>${safe(p.name)}</h3><p>${safe(p.label)}</p></div><span class="project-number">${String(p.index+1).padStart(2,'0')}</span></div></button>`).join('');
+  grid.innerHTML=list.map(p=>`<button class="project-card" type="button" data-index="${p.index}" aria-label="Ver proyecto ${safe(p.name)}"><div class="project-image"><img src="${safe(p.cover)}" alt="Vista previa del proyecto ${safe(p.name)}" loading="lazy"><span class="project-arrow" aria-hidden="true">↗︎</span></div><div class="project-info"><div><h3>${safe(p.name)}</h3><p>${safe(p.label)}</p></div><span class="project-number">${String(p.index+1).padStart(2,'0')}</span></div></button>`).join('');
   grid.querySelectorAll('[data-index]').forEach(b=>b.addEventListener('click',()=>openProject(Number(b.dataset.index))));
   layoutMasonry(grid);
   grid.querySelectorAll('.project-card').forEach((card,i)=>{card.classList.add('reveal');card.style.setProperty('--delay',`${(i%2)*0.12}s`);observeReveal(card);});
@@ -25,7 +25,7 @@ function openProject(i){
  currentIndex=(i+projects.length)%projects.length;const p=projects[currentIndex];
  counter.textContent=`PROYECTO ${String(currentIndex+1).padStart(2,'0')} / ${String(projects.length).padStart(2,'0')}`;
  const gallery=p.gallery.map(g=>g.type==='heading'?`<h3 class="gallery-heading">${safe(g.text)}</h3>`:g.type==='video'?`<div class="video-wrap wide"><video src="${safe(g.src)}" controls muted preload="metadata" playsinline aria-label="${safe(g.title)}"></video><button type="button" class="sound-btn" aria-label="Activar sonido">ACTIVAR SONIDO</button></div>`:(g.caption?`<figure class="gallery-fig ${p.gallery.length===1||g.wide?'wide':''}"><img src="${safe(g.src)}" alt="${safe(g.alt)}" loading="lazy"><figcaption>${safe(g.caption)}</figcaption></figure>`:`<img class="${p.gallery.length===1||g.wide?'wide':''}${g.transparent?' no-bg':''}" src="${safe(g.src)}" alt="${safe(g.alt)}" loading="lazy">`)).join('');
- content.innerHTML=`<p class="detail-sub">${safe(p.label)} · ${safe(p.year)}</p><h2 id="detail-title" class="detail-title">${safe(p.name)}</h2><p class="detail-sub">${safe(p.summary)}</p><img class="detail-hero" src="${safe(p.cover)}" alt="Imagen principal de ${safe(p.name)}"><div class="detail-grid"><div class="detail-meta"><strong>CATEGORÍA</strong>${safe(p.label)}<br><strong>TIPO</strong>${safe(p.year)}<br><strong>HERRAMIENTAS</strong>${safe(p.tools).split(' · ').map(t=>{const k=t.indexOf(':');return k>0?`<span class="tool"><b>${t.slice(0,k)}</b>${t.slice(k+1)}</span>`:`<span class="tool">${t}</span>`;}).join('<br>')}</div><div class="detail-text">${p.brief?`<h3>${safe(p.briefTitle||'EL DESAFÍO')}</h3><p>${safe(p.brief)}</p>`:''}${p.process?`<h3>${safe(p.processTitle||'DESARROLLO')}</h3><p>${safe(p.process)}</p>`:''}${p.note?`<p class="detail-note">${safe(p.note)}</p>`:''}</div></div>${p.url?`<div class="detail-cta"><a class="detail-link" target="_blank" rel="noopener noreferrer" href="${safe(p.url)}">${safe(p.urlLabel||'VER PROYECTO')} ↗</a></div>`:''}<div class="detail-gallery">${gallery}</div>${p.steps?renderSteps(p.stepsEyebrow||'BITÁCORA DE PROCESO',p.stepsTitle||'Bitácora de proceso',p.stepsIntro,p.steps,true):''}${p.extra?renderSteps('PROCESO',p.extra.title,p.extra.intro,p.extra.items,false):''}`;
+ content.innerHTML=`<p class="detail-sub">${safe(p.label)} · ${safe(p.year)}</p><h2 id="detail-title" class="detail-title">${safe(p.name)}</h2><p class="detail-sub">${safe(p.summary)}</p><img class="detail-hero" src="${safe(p.cover)}" alt="Imagen principal de ${safe(p.name)}"><div class="detail-grid"><div class="detail-meta"><strong>CATEGORÍA</strong>${safe(p.label)}<br><strong>TIPO</strong>${safe(p.year)}<br><strong>HERRAMIENTAS</strong>${safe(p.tools).split(' · ').map(t=>{const k=t.indexOf(':');return k>0?`<span class="tool"><b>${t.slice(0,k)}</b>${t.slice(k+1)}</span>`:`<span class="tool">${t}</span>`;}).join('<br>')}</div><div class="detail-text">${p.brief?`<h3>${safe(p.briefTitle||'EL DESAFÍO')}</h3><p>${safe(p.brief)}</p>`:''}${p.process?`<h3>${safe(p.processTitle||'DESARROLLO')}</h3><p>${safe(p.process)}</p>`:''}${p.note?`<p class="detail-note">${safe(p.note)}</p>`:''}</div></div>${p.url?`<div class="detail-cta"><a class="detail-link" target="_blank" rel="noopener noreferrer" href="${safe(p.url)}">${safe(p.urlLabel||'VER PROYECTO')} ↗︎</a></div>`:''}<div class="detail-gallery">${gallery}</div>${p.steps?renderSteps(p.stepsEyebrow||'BITÁCORA DE PROCESO',p.stepsTitle||'Bitácora de proceso',p.stepsIntro,p.steps,true):''}${p.extra?renderSteps('PROCESO',p.extra.title,p.extra.intro,p.extra.items,false):''}`;
  if(!dialog.open)dialog.showModal();dialog.scrollTop=0;
  content.querySelectorAll('video').forEach(v=>videoObserver?videoObserver.observe(v):null);
  content.querySelectorAll('.steps-grid').forEach(layoutMasonry);
@@ -155,8 +155,8 @@ document.querySelectorAll('.reveal').forEach(observeReveal);
 
 /* 5. Portada: lámpara de lava. Las manchas flotan por todo el espacio,
    esquivan el mouse (o el dedo), se parten al chocar con él y luego se vuelven a juntar. */
-(function lavaLamp(){
-  const hero=document.querySelector('.hero'), cv=document.querySelector('.hero-lava');
+function lavaLamp(hero){
+  const cv=hero&&hero.querySelector('.hero-lava');
   if(!hero||!cv)return;
   const ctx=cv.getContext('2d');
   const COLORS=[[255,0,157],[255,64,190],[150,90,255],[255,0,120],[210,60,255]];
@@ -237,6 +237,8 @@ document.querySelectorAll('.reveal').forEach(observeReveal);
   let visible=true;
   if('IntersectionObserver' in window)new IntersectionObserver(e=>{visible=e[0].isIntersecting;}).observe(hero);
   (function loop(){if(visible){step();draw();}requestAnimationFrame(loop);})();
-})();
+}
+/* la lava va en la portada y en contacto */
+document.querySelectorAll('.hero, .contact').forEach(lavaLamp);
 
 renderCards();

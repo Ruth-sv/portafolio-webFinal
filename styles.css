@@ -776,3 +776,10 @@ img, video { max-width: 100%; display: block; }
   filter: blur(28px) saturate(1.15);
   pointer-events: none;
 }
+
+/* CONTACTO: misma lámpara de lava que la portada */
+.contact { position: relative; overflow: hidden; isolation: isolate; }
+.contact .hero-lava { z-index: -1; }
+
+/* iPhone/Safari: mostrar ✳ y las flechas como texto, no como emoji */
+body { font-variant-emoji: text; }
