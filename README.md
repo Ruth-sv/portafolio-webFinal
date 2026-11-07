@@ -9,7 +9,7 @@ Portafolio web de diseño gráfico (especialidad multimedia). Página estática:
 
 - **Proyectos (textos, imágenes, videos, bitácoras):** lista `projects` al inicio de `script.js`.
 - **Colores, tipografía y redondeo de esquinas:** variables en `:root`, al inicio de `styles.css`.
-- **Imágenes y videos:** en `assets/`, una carpeta por proyecto (`Adela`, `Bless`, `Ruc`, `Revista`, `Key visual`, `Sobre-mi`).
+- **Imágenes y videos:** en `assets/`, una carpeta por proyecto (`Adela`, `Bless`, `Ruc`, `Key visual`).
 
 ## Publicar cambios
 

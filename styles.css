@@ -120,13 +120,13 @@ img, video { max-width: 100%; display: block; }
   width: 55vw; height: 55vw;
   right: -15vw; top: -20vw;
   background: radial-gradient(circle, rgba(255, 0, 157, .55), transparent 65%);
-  animation: float-a 16s ease-in-out infinite alternate;
+  animation: orbit-a 22s linear infinite;
 }
 .hero::after {
   width: 40vw; height: 40vw;
   left: -10vw; bottom: -18vw;
   background: radial-gradient(circle, rgba(120, 90, 255, .35), transparent 65%);
-  animation: float-b 20s ease-in-out infinite alternate;
+  animation: orbit-b 28s linear infinite;
 }
 /* grano tipo impresión */
 .hero-grain {
@@ -519,8 +519,21 @@ img, video { max-width: 100%; display: block; }
 @keyframes char-in { to { opacity: 1; transform: none; } }
 @keyframes bob { 50% { transform: translateY(5px); } }
 @keyframes marquee { to { transform: translateX(-50%); } }
-@keyframes float-a { to { transform: translate(-12vw, 14vw) scale(1.15); } }
-@keyframes float-b { to { transform: translate(14vw, -8vw) scale(.9); } }
+/* la luz rosada recorre los bordes de la portada como en una órbita */
+@keyframes orbit-a {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(-28vw, 22vh) scale(1.15); }
+  50%  { transform: translate(-60vw, 40vh) scale(.95); }
+  75%  { transform: translate(-30vw, 8vh) scale(1.1); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes orbit-b {
+  0%   { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(30vw, -6vh) scale(1.1); }
+  50%  { transform: translate(55vw, -40vh) scale(.9); }
+  75%  { transform: translate(22vw, -30vh) scale(1.05); }
+  100% { transform: translate(0, 0) scale(1); }
+}
 @keyframes dialog-in { from { opacity: 0; transform: translateY(40px) scale(.98); } }
 
 /* ---------- 10. CELULAR ---------- */
@@ -745,4 +758,21 @@ img, video { max-width: 100%; display: block; }
 @media (max-width: 720px) {
   .about-wrap { margin-top: 30px; height: 80vh; }
   .about-cutout { margin-left: 0; max-width: 100%; }
+}
+
+/* celular: aire entre "SOBRE MÍ." y "HOLA, SOY RUTH PEREZ." */
+@media (max-width: 720px) {
+  .about-left .section-heading { margin-bottom: 32px; }
+}
+
+/* PORTADA: lámpara de lava interactiva (reemplaza las luces fijas) */
+.hero::before, .hero::after { display: none; }
+.hero-lava {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  filter: blur(28px) saturate(1.15);
+  pointer-events: none;
 }

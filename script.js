@@ -153,4 +153,90 @@ document.querySelectorAll('.reveal').forEach(observeReveal);
   (function loop(){cx+=(x-cx)*.18;cy+=(y-cy)*.18;cursor.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(loop);})();
 })();
 
+/* 5. Portada: lámpara de lava. Las manchas flotan por todo el espacio,
+   esquivan el mouse (o el dedo), se parten al chocar con él y luego se vuelven a juntar. */
+(function lavaLamp(){
+  const hero=document.querySelector('.hero'), cv=document.querySelector('.hero-lava');
+  if(!hero||!cv)return;
+  const ctx=cv.getContext('2d');
+  const COLORS=[[255,0,157],[255,64,190],[150,90,255],[255,0,120],[210,60,255]];
+  const BASE=6, MAX=12;
+  let W=0,H=0,blobs=[],mouse={x:-9999,y:-9999,vx:0,vy:0,on:false};
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+  function size(){const r=hero.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,1.5);W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+  function make(x,y,r,c){return{x,y,r,target:r,vx:rnd(-.35,.35),vy:rnd(-.35,.35),c:c||COLORS[Math.floor(Math.random()*COLORS.length)],age:0};}
+  function init(){size();const m=Math.min(W,H);blobs=[];for(let i=0;i<BASE;i++)blobs.push(make(rnd(.1,.9)*W,rnd(.1,.9)*H,rnd(.16,.28)*m));}
+  function pointer(x,y){const r=hero.getBoundingClientRect();const nx=x-r.left,ny=y-r.top;mouse.vx=nx-mouse.x;mouse.vy=ny-mouse.y;mouse.x=nx;mouse.y=ny;mouse.on=true;}
+  hero.addEventListener('mousemove',e=>pointer(e.clientX,e.clientY));
+  hero.addEventListener('touchmove',e=>{const t=e.touches[0];if(t)pointer(t.clientX,t.clientY);},{passive:true});
+  hero.addEventListener('mouseleave',()=>{mouse.on=false;mouse.x=mouse.y=-9999;});
+  hero.addEventListener('touchend',()=>{mouse.on=false;mouse.x=mouse.y=-9999;});
+  window.addEventListener('resize',()=>{const oW=W,oH=H;size();blobs.forEach(b=>{b.x*=W/oW;b.y*=H/oH;});});
+  function step(){
+    const m=Math.min(W,H), R=Math.max(140,m*.28);
+    for(let i=blobs.length-1;i>=0;i--){
+      const b=blobs[i]; b.age++;
+      // esquivar el mouse
+      if(mouse.on){
+        const dx=b.x-mouse.x, dy=b.y-mouse.y, d=Math.hypot(dx,dy)||1;
+        if(d<R+b.r*.5){
+          const f=(1-d/(R+b.r*.5))*1.6; b.vx+=dx/d*f; b.vy+=dy/d*f;
+          // se parte si el mouse la atraviesa con fuerza
+          const speed=Math.hypot(mouse.vx,mouse.vy);
+          if(d<b.r*.7&&speed>6&&b.r>m*.09&&blobs.length<MAX&&b.age>40){
+            const nr=b.r*.72, ang=Math.atan2(mouse.vy,mouse.vx)+Math.PI/2;
+            const a=make(b.x+Math.cos(ang)*nr*.5,b.y+Math.sin(ang)*nr*.5,nr,b.c), c2=make(b.x-Math.cos(ang)*nr*.5,b.y-Math.sin(ang)*nr*.5,nr,b.c);
+            a.vx=Math.cos(ang)*2.2;a.vy=Math.sin(ang)*2.2;c2.vx=-a.vx;c2.vy=-a.vy;a.target=c2.target=b.target*.72;
+            blobs.splice(i,1,a,c2); continue;
+          }
+        }
+      }
+      // deriva suave tipo lava (sube y baja lento)
+      b.vy+=Math.sin((b.age+i*90)/240)*.006; b.vx+=Math.cos((b.age+i*60)/300)*.004;
+      // fricción y límite de velocidad
+      b.vx*=.985; b.vy*=.985;
+      const sp=Math.hypot(b.vx,b.vy), maxS=3.2, minS=.18;
+      if(sp>maxS){b.vx*=maxS/sp;b.vy*=maxS/sp;} else if(sp<minS){b.vx+=rnd(-.05,.05);b.vy+=rnd(-.05,.05);}
+      b.x+=b.vx; b.y+=b.vy;
+      // rebote suave dentro de toda la portada
+      const pad=-b.r*.25;
+      if(b.x<pad){b.x=pad;b.vx=Math.abs(b.vx);} if(b.x>W-pad){b.x=W-pad;b.vx=-Math.abs(b.vx);}
+      if(b.y<pad){b.y=pad;b.vy=Math.abs(b.vy);} if(b.y>H-pad){b.y=H-pad;b.vy=-Math.abs(b.vy);}
+      b.r+=(b.target-b.r)*.02;
+    }
+    // volver a juntarse: si hay más manchas de la cuenta, las que se tocan se funden
+    if(blobs.length>BASE){
+      outer: for(let i=0;i<blobs.length;i++)for(let k=i+1;k<blobs.length;k++){
+        const a=blobs[i],c2=blobs[k];
+        if(a.age>180&&c2.age>180&&Math.hypot(a.x-c2.x,a.y-c2.y)<(a.r+c2.r)*.45){
+          const r=Math.min(Math.hypot(a.r,c2.r),m*.3);
+          const n=make((a.x+c2.x)/2,(a.y+c2.y)/2,r,a.c); n.vx=(a.vx+c2.vx)/2;n.vy=(a.vy+c2.vy)/2;n.age=0;n.target=r;
+          blobs.splice(k,1);blobs.splice(i,1,n); break outer;
+        }
+      }
+      // y si tardan, se van atrayendo de a poco
+      blobs.forEach((a,i)=>{let best=null,bd=1e9;blobs.forEach((c2,k)=>{if(k!==i){const d=Math.hypot(a.x-c2.x,a.y-c2.y);if(d<bd){bd=d;best=c2;}}});if(best&&a.age>240){a.vx+=(best.x-a.x)/bd*.02;a.vy+=(best.y-a.y)/bd*.02;}});
+    }
+    mouse.vx*=.8; mouse.vy*=.8;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.globalCompositeOperation='lighter';
+    blobs.forEach(b=>{
+      const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+      const [r,gc,bl]=b.c;
+      g.addColorStop(0,`rgba(${r},${gc},${bl},.55)`);
+      g.addColorStop(.55,`rgba(${r},${gc},${bl},.22)`);
+      g.addColorStop(1,`rgba(${r},${gc},${bl},0)`);
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalCompositeOperation='source-over';
+  }
+  init();
+  if(reduceMotion){draw();return;}
+  let visible=true;
+  if('IntersectionObserver' in window)new IntersectionObserver(e=>{visible=e[0].isIntersecting;}).observe(hero);
+  (function loop(){if(visible){step();draw();}requestAnimationFrame(loop);})();
+})();
+
 renderCards();
