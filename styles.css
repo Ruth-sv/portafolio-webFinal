@@ -1,0 +1,748 @@
+/* =========================================================
+   PORTAFOLIO RUTH PEREZ — ESTILOS
+   1. Variables (colores y tipografía)
+   2. Base
+   3. Header
+   4. Portada (hero) + cinta animada
+   5. Proyectos
+   6. Sobre mí
+   7. Contacto
+   8. Ficha de proyecto (dialog)
+   9. Animaciones y cursor
+   10. Celular
+   11. Movimiento reducido
+   ========================================================= */
+
+/* ---------- 1. VARIABLES ---------- */
+:root {
+  --magenta: #ff009d;
+  --navy: #1b183b;
+  --black: #080808;
+  --white: #fff;
+  --paper: #f8f7f5;
+  --font: Helvetica, Arial, sans-serif;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  /* PORTADA: cuando tengas tu fondo, cambia none por url('fondos/portada.webp') */
+  --hero-bg: none;
+  /* REDONDEO: sube o baja este número para esquinas más o menos redondas */
+  --radius: 22px;
+}
+
+/* ---------- 2. BASE ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+button, a { font: inherit; }
+a { color: inherit; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--magenta); outline-offset: 4px; }
+img, video { max-width: 100%; display: block; }
+::selection { color: white; background: var(--magenta); }
+
+.skip-link { position: absolute; top: -100px; z-index: 1000; background: white; padding: 12px; }
+.skip-link:focus { top: 0; }
+
+/* ---------- 3. HEADER ---------- */
+.header {
+  height: 76px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(255, 255, 255, .85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(22px, 5vw, 78px);
+  transition: transform .45s var(--ease);
+}
+.header.is-hidden { transform: translateY(-100%); }
+.logo { font-size: 26px; font-weight: 900; letter-spacing: -2px; text-decoration: none; }
+.logo span { color: var(--magenta); display: inline-block; transition: transform .6s var(--ease); }
+.logo:hover span { transform: rotate(180deg); }
+.header nav { display: flex; align-items: center; gap: clamp(20px, 4vw, 60px); }
+.header nav a {
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .08em;
+  position: relative;
+}
+/* línea magenta que crece al pasar el mouse */
+.header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: var(--magenta);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .4s var(--ease);
+}
+.header nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+.header nav a:hover, .text-link:hover { color: var(--magenta); }
+.menu-toggle { display: none; background: none; border: 0; font-size: 12px; font-weight: 900; }
+
+/* ---------- 4. PORTADA ---------- */
+.hero {
+  background-color: var(--navy);
+  background-image: var(--hero-bg);
+  background-size: cover;
+  background-position: center;
+  color: white;
+  min-height: min(850px, calc(100svh - 76px));
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 24px clamp(22px, 5vw, 78px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/* manchas de luz magenta que flotan detrás del texto */
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.hero::before {
+  width: 55vw; height: 55vw;
+  right: -15vw; top: -20vw;
+  background: radial-gradient(circle, rgba(255, 0, 157, .55), transparent 65%);
+  animation: float-a 16s ease-in-out infinite alternate;
+}
+.hero::after {
+  width: 40vw; height: 40vw;
+  left: -10vw; bottom: -18vw;
+  background: radial-gradient(circle, rgba(120, 90, 255, .35), transparent 65%);
+  animation: float-b 20s ease-in-out infinite alternate;
+}
+/* grano tipo impresión */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .12;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-top, .hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: .16em;
+  font-weight: 700;
+}
+.hero-content { margin: 90px 0 80px; }
+.eyebrow { font-size: 12px; letter-spacing: .15em; font-weight: 900; margin: 0 0 25px; }
+.magenta, .accent { color: var(--magenta); }
+.hero h1 {
+  font-weight: 900;
+  font-size: clamp(85px, 17vw, 270px);
+  letter-spacing: -.105em;
+  line-height: .72;
+  margin: 0 0 40px;
+}
+.hero-star {
+  display: inline-block;
+  font-size: .38em;
+  vertical-align: top;
+  margin-left: .13em;
+  letter-spacing: 0;
+  color: var(--magenta);
+  animation: star-spin 5s linear infinite, star-pulse 1.4s ease-in-out infinite alternate;
+}
+.hero-description { font-size: clamp(16px, 2vw, 25px); max-width: 600px; line-height: 1.35; }
+.scroll-hint { display: inline-block; animation: bob 1.8s ease-in-out infinite; }
+
+/* letras del nombre (las separa script.js) */
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(60%) rotate(6deg);
+  animation: char-in 1s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 55ms + 150ms);
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 38px;
+  background: var(--magenta);
+  padding: 18px 26px;
+  border-radius: 999px;
+  margin-top: 24px;
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: .1em;
+  font-weight: 900;
+  border: 2px solid var(--magenta);
+  transition: background .3s, color .3s, gap .4s var(--ease);
+}
+.pill-link:hover { background: white; color: var(--black); gap: 52px; }
+
+/* cinta de texto que corre */
+.marquee {
+  background: var(--magenta);
+  color: white;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  padding: 16px 0;
+  font-weight: 900;
+  font-size: clamp(18px, 2.4vw, 32px);
+  letter-spacing: -.02em;
+}
+.marquee-track { display: inline-flex; animation: marquee 28s linear infinite; }
+.marquee-track span { padding-right: 1.2em; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* ---------- 5. PROYECTOS ---------- */
+.section-pad { padding: clamp(70px, 9vw, 140px) clamp(22px, 5vw, 78px); }
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 52px;
+}
+.section-heading h2 {
+  font-size: clamp(46px, 8.5vw, 135px);
+  line-height: .83;
+  letter-spacing: -.075em;
+  margin: 0;
+  font-weight: 900;
+}
+.section-note { max-width: 300px; font-size: 15px; line-height: 1.55; }
+
+.filters { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 28px; }
+.filter {
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid #bdbdbd;
+  background: white;
+  color: #111;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .07em;
+  transition: background .25s, color .25s, border-color .25s;
+}
+.filter span { opacity: .65; margin-left: 5px; }
+.filter.is-active, .filter:hover { background: var(--black); border-color: var(--black); color: white; }
+.filter.is-active { background: var(--magenta); border-color: var(--magenta); }
+
+/* Mosaico tipo Pinterest: las tarjetas se acomodan en columnas sin dejar huecos */
+.project-grid,
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 8px;          /* script.js calcula cuántas filas ocupa cada tarjeta */
+  grid-auto-flow: row dense;
+  column-gap: 23px;
+  align-items: start;
+}
+/* orden de lectura: 1 izquierda, 2 derecha, 3 izquierda, 4 derecha... */
+.project-card:nth-child(odd) { grid-column: 1; }
+.project-card:nth-child(even) { grid-column: 2; }
+.project-card {
+  border: 0;
+  text-align: left;
+  padding: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.project-image { background: #e7e7e7; overflow: hidden; position: relative; border-radius: var(--radius); }
+.project-image img {
+  width: 100%;
+  height: auto; /* la imagen mantiene su proporción original */
+  transition: transform .9s var(--ease);
+}
+.project-card:hover img { transform: scale(1.06); }
+/* velo magenta que sube al pasar el mouse */
+.project-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--magenta);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+}
+.project-card:hover .project-image::after { opacity: .25; }
+.project-arrow {
+  position: absolute;
+  z-index: 1;
+  right: 16px;
+  bottom: 16px;
+  background: var(--magenta);
+  color: white;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  transition: transform .5s var(--ease), background .3s;
+}
+.project-card:hover .project-arrow { transform: rotate(45deg) scale(1.1); background: var(--black); }
+.project-info {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 0;
+  border-bottom: 1px solid #111;
+  position: relative;
+}
+/* la línea inferior se pinta magenta de izquierda a derecha */
+.project-info::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 100%; height: 2px;
+  background: var(--magenta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .6s var(--ease);
+}
+.project-card:hover .project-info::after { transform: scaleX(1); }
+.project-info h3 {
+  margin: 0 0 7px;
+  font-size: clamp(20px, 3vw, 38px);
+  letter-spacing: -.05em;
+  transition: color .3s, transform .5s var(--ease);
+}
+.project-card:hover .project-info h3 { color: var(--magenta); transform: translateX(8px); }
+.project-info p { margin: 0; font-size: 12px; font-weight: 700; color: #6b6b6b; letter-spacing: .04em; }
+.project-number { font-size: 12px; font-weight: 900; }
+.project-card[hidden] { display: none !important; }
+
+/* ---------- 6. SOBRE MÍ ---------- */
+.about { background: var(--paper); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10vw; }
+.about-statement {
+  font-size: clamp(24px, 2.4vw, 38px); /* subtítulo */
+  line-height: .95;
+  letter-spacing: -.05em;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+.about-statement em { font-style: normal; color: var(--magenta); }
+.about-statement span {
+  display: inline-block;
+  color: var(--navy);
+  margin-top: 0;
+  margin-left: .25em;
+  animation: star-spin 6s linear infinite, star-pulse 1.7s ease-in-out infinite alternate;
+}
+.about-copy { font-size: 16px; line-height: 1.67; max-width: 560px; }
+.about-copy h3 { font-size: 22px; line-height: 1.2; margin: 0 0 30px; }
+.about-copy h4 { font-size: 12px; margin: 26px 0 7px; letter-spacing: .13em; }
+.about-copy p { margin: 0 0 17px; }
+.text-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 12px;
+  letter-spacing: .07em;
+  font-weight: 900;
+  text-decoration: none;
+  border-bottom: 2px solid;
+  padding-bottom: 8px;
+}
+
+/* ---------- 7. CONTACTO ---------- */
+.contact {
+  background: var(--navy);
+  color: white;
+  min-height: 550px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.contact h2 { font-size: clamp(49px, 9vw, 140px); line-height: .9; letter-spacing: -.085em; margin: 10px 0 28px; }
+.contact h2 span { color: var(--magenta); }
+.email {
+  font-size: clamp(15px, 2.8vw, 40px);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+  border-bottom: 2px solid white;
+  padding-bottom: 15px;
+  align-self: flex-start;
+  transition: color .3s, border-color .3s, padding-left .5s var(--ease);
+}
+.email:hover { color: var(--magenta); border-color: var(--magenta); padding-left: 18px; }
+.contact-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 10px;
+  letter-spacing: .1em;
+  font-weight: 700;
+  margin-top: 120px;
+}
+.contact-footer a { text-decoration: none; }
+
+/* ---------- 8. FICHA DE PROYECTO ---------- */
+.project-dialog {
+  border: 0;
+  padding: 0;
+  background: white;
+  color: var(--black);
+  width: min(1100px, 96vw);
+  max-height: 94vh;
+  border-radius: var(--radius);
+  box-shadow: 0 30px 110px #0008;
+}
+.project-dialog[open] { animation: dialog-in .6s var(--ease); }
+.project-dialog::backdrop { background: #080808d9; backdrop-filter: blur(4px); }
+.dialog-inner { padding: clamp(18px, 4vw, 50px); }
+.dialog-top, .dialog-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 0 26px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+.dialog-top button, .dialog-bottom button {
+  background: transparent;
+  border: 0;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .08em;
+  transition: color .25s;
+}
+.dialog-top button:hover, .dialog-bottom button:hover { color: var(--magenta); }
+.dialog-bottom { border-top: 1px solid #bbb; padding: 23px 0 0; margin-top: 40px; }
+.detail-title { font-size: clamp(48px, 8vw, 110px); letter-spacing: -.075em; line-height: .95; margin: 15px 0; }
+.detail-sub { font-size: 12px; color: #555; font-weight: 700; letter-spacing: .06em; }
+/* En la ficha las imágenes se achican para caber en pantalla, sin recortarse */
+.detail-hero { display: block; width: auto; max-width: 100%; height: auto; max-height: 72vh; margin: 32px auto; border-radius: calc(var(--radius) * .6); }
+.detail-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 50px; margin: 30px 0; }
+.detail-meta { font-size: 12px; line-height: 1.65; }
+/* títulos de sección (CATEGORÍA, TIPO, HERRAMIENTAS, EL DESAFÍO, DESARROLLO) */
+.detail-meta strong, .detail-text h3 {
+  display: block;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  line-height: 1.1;
+  margin: 0 0 10px;
+}
+.detail-meta strong:not(:first-child) { margin-top: 22px; }
+.detail-text p { font-size: 12px; line-height: 1.65; margin: 0 0 22px; }
+.detail-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.detail-gallery img, .detail-gallery video { height: auto; border-radius: calc(var(--radius) * .6); }
+.detail-gallery video { display: block; width: auto; max-width: 100%; max-height: 80vh; margin: 0 auto; background: #000; }
+/* la caja se ajusta exactamente a la foto, así las esquinas redondeadas siempre se ven */
+.detail-gallery img { display: block; width: auto; max-width: 100%; max-height: 80vh; margin: 0 auto; }
+.detail-gallery .wide { grid-column: span 2; }
+.detail-link {
+  display: inline-block;
+  background: var(--magenta);
+  color: white;
+  padding: 18px 30px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: .06em;
+  margin: 0;
+  transition: background .3s, transform .3s var(--ease);
+}
+.detail-link:hover { transform: scale(1.03); }
+.detail-link:hover { background: var(--black); }
+.detail-note { font-size: 12px; color: #666; }
+
+/* ---------- 9. ANIMACIONES Y CURSOR ---------- */
+/* Aparecer al hacer scroll (solo si hay JavaScript) */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+  transition-delay: var(--delay, 0s);
+}
+.js .reveal.is-visible { opacity: 1; transform: none; }
+
+/* Cursor personalizado: un aura magenta difuminada (solo computadores con mouse) */
+.cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .cursor {
+    display: block;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 999;
+    width: 56px; height: 56px;
+    margin: -28px 0 0 -28px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 0, 157, .55) 0%, rgba(255, 0, 157, .22) 38%, rgba(255, 0, 157, 0) 70%);
+    filter: blur(6px);
+    pointer-events: none;
+    transition: width .5s var(--ease), height .5s var(--ease), margin .5s var(--ease), opacity .3s;
+  }
+  /* sobre enlaces y botones: el aura se agranda un poco */
+  .cursor.is-link { width: 76px; height: 76px; margin: -38px 0 0 -38px; }
+  /* sobre un proyecto: aura grande que "respira", invita a hacer clic */
+  .cursor.is-card {
+    width: 120px; height: 120px; margin: -60px 0 0 -60px;
+    background: radial-gradient(circle, rgba(255, 0, 157, .45) 0%, rgba(255, 0, 157, .18) 42%, rgba(255, 0, 157, 0) 70%);
+    animation: aura-breathe 1.6s ease-in-out infinite alternate;
+  }
+  .cursor.is-hidden { opacity: 0; }
+}
+@keyframes aura-breathe { from { opacity: .75; scale: .92; } to { opacity: 1; scale: 1.08; } }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+/* estrellas: giro continuo + latido suave, por separado para que sea fluido */
+@keyframes star-spin { from { rotate: 0deg; } to { rotate: 360deg; } }
+@keyframes star-pulse { from { scale: .88; } to { scale: 1.3; } }
+@keyframes char-in { to { opacity: 1; transform: none; } }
+@keyframes bob { 50% { transform: translateY(5px); } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes float-a { to { transform: translate(-12vw, 14vw) scale(1.15); } }
+@keyframes float-b { to { transform: translate(14vw, -8vw) scale(.9); } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(40px) scale(.98); } }
+
+/* ---------- 10. CELULAR ---------- */
+@media (max-width: 720px) {
+  .header { height: 64px; }
+  .menu-toggle { display: block; }
+  .header nav {
+    display: none;
+    position: absolute;
+    top: 64px; left: 0; right: 0;
+    padding: 26px;
+    background: white;
+    box-shadow: 0 12px 20px #0002;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 27px;
+  }
+  .header nav.open { display: flex; }
+  .hero { min-height: calc(90svh - 64px); }
+  .hero::before { width: 120vw; height: 120vw; }
+  .hero::after { width: 90vw; height: 90vw; }
+  .hero-top, .hero-bottom { font-size: 9px; }
+  .hero h1 { font-size: clamp(74px, 18vw, 140px); }
+  .hero-content { margin: 80px 0; }
+  .section-heading { align-items: start; display: block; }
+  .section-note { margin-top: 25px; }
+  .project-grid, .steps-grid { grid-template-columns: 1fr; }
+  .project-card, .step { grid-column: 1 !important; }
+  .steps-grid.no-feature { grid-template-columns: 1fr; }
+    .about-grid, .detail-grid { grid-template-columns: 1fr; gap: 20px; }
+  .about-statement { margin-bottom: 35px; }
+  .detail-gallery { grid-template-columns: 1fr; }
+  .detail-gallery .wide { grid-column: span 1; }
+  .contact-footer { margin-top: 70px; }
+  .dialog-inner { padding: 20px; }
+}
+
+/* ---------- 11. MOVIMIENTO REDUCIDO ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .char, .js .reveal { opacity: 1; transform: none; }
+}
+
+/* ---------- BITÁCORA (paso a paso dentro de la ficha) ---------- */
+.steps { margin-top: 70px; border-top: 2px solid var(--black); padding-top: 30px; }
+.steps-title { font-size: clamp(30px, 4.5vw, 56px); letter-spacing: -.05em; line-height: .95; margin: 0 0 14px; }
+.steps-intro { font-size: 12px; line-height: 1.6; color: #444; max-width: 640px; margin: 0 0 48px; }
+.step {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+/* la primera lámina (el logo) va destacada a todo el ancho */
+.step:first-child { grid-column: 1 / -1; }
+/* fotogramas: tres columnas, sin lámina destacada */
+.steps-grid.no-feature { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.steps-grid.no-feature .step { grid-column: auto !important; }
+/* 02 izquierda, 03 derecha, 04 izquierda... */
+.step:nth-child(even) { grid-column: 1; }
+.step:nth-child(odd):not(:first-child) { grid-column: 2; }
+.step-num {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 1;
+  min-width: 46px; height: 46px;
+  padding: 0 10px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--magenta);
+  color: white;
+  font-size: 18px;
+  font-weight: 900;
+}
+.step img { width: 100%; height: auto; border-radius: calc(var(--radius) * .6); }
+.step figcaption { padding-top: 12px; font-size: 12px; line-height: 1.5; }
+.step figcaption strong { display: block; font-size: 14px; font-weight: 900; letter-spacing: .04em; margin-bottom: 4px; }
+.step figcaption span { color: #555; }
+
+
+/* ---------- GALERÍA: títulos, pies de foto e imágenes sin fondo ---------- */
+.gallery-heading {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin: 36px 0 4px;
+  padding-top: 24px;
+  border-top: 2px solid var(--black);
+}
+.gallery-fig { margin: 0; }
+.gallery-fig.wide { grid-column: span 2; }
+.gallery-fig figcaption { padding-top: 10px; font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #555; }
+/* PNG con transparencia (stickers): sin fondo ni esquinas */
+.detail-gallery img.no-bg { background: none; border-radius: 0; max-height: none; }
+/* herramientas: una por línea, el programa en negrita */
+.detail-meta .tool b { font-weight: 900; }
+@media (max-width: 720px) {
+  .gallery-fig.wide { grid-column: span 1; }
+}
+
+/* ---------- VIDEO: botón para activar sonido ---------- */
+.video-wrap { position: relative; grid-column: 1 / -1; display: flex; justify-content: center; }
+.sound-btn {
+  position: absolute;
+  left: 50%; bottom: 64px;
+  transform: translateX(-50%);
+  background: var(--magenta);
+  color: white;
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  line-height: 1;
+  box-shadow: 0 4px 14px #0004;
+  transition: opacity .3s, transform .3s var(--ease);
+}
+.sound-btn:hover { transform: translateX(-50%) scale(1.05); }
+.sound-btn.is-hidden { opacity: 0; pointer-events: none; }
+
+/* botón de enlace externo: centrado, entre el texto y las imágenes */
+.detail-cta { display: flex; justify-content: center; margin: 48px 0 40px; }
+
+/* SOBRE MÍ: el texto arranca a la altura del título "SOBRE MÍ" */
+.about-left .section-heading { margin-bottom: 40px; }
+.about-copy { padding-top: 37px; } /* = alto de la línea "02 / PERFIL" */
+@media (max-width: 720px) { .about-copy { padding-top: 0; } }
+
+/* enlace a Instagram en contacto */
+.social {
+  align-self: flex-start;
+  margin-top: 22px;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 6px;
+  transition: color .3s, border-color .3s;
+}
+.social:hover { color: var(--magenta); border-color: var(--magenta); }
+
+
+
+/* SOBRE MÍ: foto grande pegada al texto, con "DISEÑO CON IDENTIDAD" ceñido a la silueta */
+.about { padding-bottom: 0; }
+.about-grid { align-items: stretch; }
+.about-left { display: flex; flex-direction: column; }
+.about-left .section-heading { margin-bottom: 24px; }
+.about-copy { padding-bottom: clamp(70px, 9vw, 140px); }
+.about-wrap {
+  flex: 1 1 auto;
+  height: clamp(480px, 80vh, 860px);
+  overflow: hidden;
+  margin-right: calc(-10vw + 28px);   /* la foto llega casi al borde del texto de presentación */
+}
+.about-cutout {
+  float: right;
+  height: 100%;
+  width: auto;
+  shape-outside: polygon(100% 0%, 100.0% 0.0%, 40.3% 2.1%, 39.9% 4.2%, 39.8% 6.2%, 39.2% 8.3%, 37.9% 10.4%, 37.1% 12.5%, 36.3% 14.6%, 36.0% 16.6%, 35.5% 18.7%, 27.0% 20.8%, 19.0% 22.9%, 8.8% 25.0%, 7.9% 27.0%, 4.1% 29.1%, 3.6% 31.2%, 5.5% 33.3%, 4.4% 35.3%, 6.3% 37.4%, 6.1% 39.5%, 9.6% 41.6%, 8.2% 43.7%, 6.6% 45.7%, 6.0% 47.8%, 4.7% 49.9%, 4.2% 52.0%, 3.6% 54.1%, 2.7% 56.1%, 2.4% 58.2%, 1.7% 60.3%, 1.3% 62.4%, 0.9% 64.5%, 0.3% 66.5%, 0.0% 68.6%, 2.8% 70.7%, 6.6% 72.8%, 11.3% 74.9%, 15.7% 76.9%, 20.3% 79.0%, 20.9% 81.1%, 20.1% 83.2%, 20.1% 85.3%, 22.5% 87.3%, 25.5% 89.4%, 26.9% 91.5%, 27.7% 93.6%, 27.4% 95.7%, 27.2% 97.7%, 27.2% 99.9%, 100% 100%);
+  shape-margin: 14px;
+}
+.about-wrap-text {
+  margin: 0;
+  font-size: clamp(22px, 2.3vw, 36px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -.04em;
+  text-align: right;
+  color: var(--navy);
+  opacity: .3; /* sube o baja este número (0 a 1) para hacerlo más o menos visible */
+}
+.about-wrap-text em { font-style: normal; color: var(--magenta); }
+.about-wrap-text i { font-style: normal; color: var(--magenta); display: inline-block; animation: star-spin 6s linear infinite; }
+@media (max-width: 720px) {
+  .about-grid { display: flex; flex-direction: column; gap: 0; }
+  .about-left { display: contents; }
+  .about-left .section-heading { order: 0; }
+  .about-copy { order: 1; padding-bottom: 24px; }
+  .about-wrap { order: 2; height: 78vh; margin-right: 0; }
+}
+
+/* SOBRE MÍ: "DISEÑO CON IDENTIDAD" en su tamaño original, integrado a la foto:
+   el texto pasa por detrás de la silueta y la foto queda en primer plano */
+.about-wrap { position: relative; }
+.about-cutout { position: relative; z-index: 1; shape-outside: none; }
+.about-statement.about-behind {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 14%;
+  margin: 0;
+  font-size: clamp(45px, 7vw, 120px);
+  line-height: .88;
+  letter-spacing: -.075em;
+  font-weight: 900;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  color: var(--black);
+}
+.about-statement.about-behind em { font-style: normal; color: var(--magenta); }
+.about-statement.about-behind span { display: inline-block; color: var(--navy); margin-left: .12em; }
+@media (max-width: 720px) {
+  .about-statement.about-behind { top: 6%; font-size: clamp(40px, 13vw, 72px); }
+}
+
+/* SOBRE MÍ (versión final): solo la foto, grande, alineada bajo "SOBRE MÍ" */
+.about-wrap { margin-right: 0; overflow: visible; }
+.about-cutout { float: none; display: block; height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: left bottom; margin-left: 0; }
+
+/* SOBRE MÍ: foto 1,5 cm (≈57 px) a la derecha y a 1,5 cm bajo "SOBRE MÍ", más grande */
+.about-left .section-heading { margin-bottom: 0; }
+.about-wrap { margin-top: 57px; height: clamp(560px, 92vh, 1000px); }
+.about-cutout { margin-left: 57px; max-width: calc(100% - 57px); }
+@media (max-width: 720px) {
+  .about-wrap { margin-top: 30px; height: 80vh; }
+  .about-cutout { margin-left: 0; max-width: 100%; }
+}

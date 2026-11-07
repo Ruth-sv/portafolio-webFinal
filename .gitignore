@@ -1,0 +1,12 @@
+# Archivos de trabajo pesados: viven en Escritorio/portafolio_originales, no en la web
+*.pdf
+*.psd
+*.ai
+*.indd
+*.aep
+*.ps
+*.zip
+
+# Sistema
+.DS_Store
+Thumbs.db

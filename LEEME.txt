@@ -1,0 +1,14 @@
+PORTAFOLIO WEB — RUTH PEREZ
+
+1. Abre index.html en un navegador para ver la base.
+2. La portada visual definitiva la diseñas tú. Guarda tu fondo como fondos/portada.webp (o modifica esa ruta en styles.css). Puedes reemplazar la composición de la sección .hero en index.html.
+3. Para cambiar textos, orden o imágenes de proyectos: edita la lista 'projects' al inicio de script.js.
+4. Para agregar imágenes, colócalas en assets/ y añade su ruta en gallery del proyecto.
+5. Para añadir el manual Bless, incorpora sus páginas como imágenes en assets/ y enlázalas en el gallery de Bless.
+6. Paleta: magenta #FF009D, marino #1B183B, blanco #FFFFFF, negro #080808. Se cambia en :root de styles.css.
+7. El enlace de Adobe Fonts está en index.html. La tipografía depende de que tu proyecto de Adobe Fonts tenga Helvetica publicada; si no, se muestra Helvetica/Arial del sistema.
+8. Los videos se reproducen al abrir cada proyecto; se incluye un enlace externo al visualizador de Adela.
+9. El CV actual es un archivo de Word editable. Cuando tengas el CV definitivo puedes sustituir CV_Ruth_Perez.docx o agregar una versión PDF y cambiar su enlace.
+10. Esta es una base de funcionamiento sin hosting. Para publicarla puedes subir la carpeta a un servidor estático, Netlify o GitHub Pages. No hace falta instalar dependencias.
+
+NOTA: algunos textos de proyectos son resúmenes iniciales y deben revisarse antes de presentar el portafolio profesionalmente. No se han inventado métricas o clientes.
